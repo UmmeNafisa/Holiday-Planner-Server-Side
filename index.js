@@ -32,6 +32,12 @@ async function run() {
             res.json(result)
         })
 
+        // get clickable package
+        app.get('/addPackages/:id', async (req, res) => {
+            let id = req.params.id;
+            const result = await packageCollection.findOne(id).toArray();
+            res.send(result)
+        })
 
         console.log("all are working perfectly");
 
