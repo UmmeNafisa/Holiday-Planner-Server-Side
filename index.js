@@ -33,27 +33,7 @@ async function run() {
         })
 
 
-        // Get events API
-        // app.get('/events', async (req, res) => {
-        //     // console.log(req);
-        //     const cursor = eventsCollection.find({});
-        //     events = await cursor.toArray();
-        //     res.json(events)
-        // })
-
-        //add event
-        // app.post("/addEvents", async (req, res) => {
-        //     const result = await eventsCollection.insertOne(req.body);
-        //     res.send(result);
-        // })
-
-        // //get search events{
-        // app.get('/searchEvents', async (req, res) => {
-        //     console.log(req.query.search);
-        //     const result = await eventsCollection.find({ eventName: { $regex: req.query.search }, }).toArray();
-        //     res.send(result)
-        // })
-
+        console.log("all are working perfectly");
 
 
 
