@@ -22,6 +22,7 @@ async function run() {
         const database = client.db("holiday-planner");
         const packageCollection = database.collection("packages");
         const userBookedCollection = database.collection("userBooked")
+        const confirmOrderCollection =  database.collection("OrderConfirm")
 
         //add packages
         app.post("/addPackages", async (req, res) => {
@@ -55,13 +56,28 @@ async function run() {
         const result = await userBookedCollection.find({}).toArray();
              res.json(result)
         })
-    
+
     //delete items
-        app.delete("/deleteItems/:id", async (req, res) => {
-        console.log(req.params.id);
-        const result = await userBookedCollection.deleteOne({_id:ObjectId(req.params.id) });
-        res.json(result);
+        app.delete("/bookItems/:id", async (req, res) => {
+        const id = req.params.id;
+        console.log(id);
+        const result = await userBookedCollection.deleteOne({_id: req.params.id });
+        res.send(result);
   });
+
+        //add Client address and details
+        app.post("/confirmBooking", async (req, res) => {
+            // console.log(req.body)
+            const result = await confirmOrderCollection.insertOne(req.body);
+            // console.log(result);
+            res.send(result)
+        })
+        
+        //get Client address and details
+        app.get('/confirmBooking', async (req, res) => {
+        const result = await confirmOrderCollection.find({}).toArray();
+             res.json(result)
+        })
         // console.log("all are working perfectly");
 
 
