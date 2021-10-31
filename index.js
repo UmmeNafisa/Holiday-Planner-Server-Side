@@ -4,6 +4,8 @@ const app = express()
 const port = process.env.PORT || 5000
 require('dotenv').config()
 const cors = require('cors')
+const ObjectId = require("mongodb").ObjectId;
+
 app.use(cors())
 app.use(express.json())
 
@@ -19,6 +21,7 @@ async function run() {
         await client.connect();
         const database = client.db("holiday-planner");
         const packageCollection = database.collection("packages");
+        const userBookedCollection = database.collection("userBooked")
 
         //add packages
         app.post("/addPackages", async (req, res) => {
@@ -37,11 +40,29 @@ async function run() {
         // get clickable package
         app.get('/addPackages/:id', async (req, res) => {
             let id = req.params.id;
-            const result = await packageCollection.findOne(id).toArray();
+            const result = await packageCollection.find({ _id: ObjectId(id)}).toArray();
             res.send(result)
         })
 
-        console.log("all are working perfectly");
+        // post book item
+        app.post('/bookItems', async (req, res) => {
+            const result = await userBookedCollection.insertOne(req.body);
+            res.send(result)
+        });
+
+        //get the book item from client page 
+        app.get('/bookItems', async (req, res) => {
+        const result = await userBookedCollection.find({}).toArray();
+             res.json(result)
+        })
+    
+    //delete items
+        app.delete("/deleteItems/:id", async (req, res) => {
+        console.log(req.params.id);
+        const result = await userBookedCollection.deleteOne({_id:ObjectId(req.params.id) });
+        res.json(result);
+  });
+        // console.log("all are working perfectly");
 
 
 
