@@ -9,7 +9,9 @@ const ObjectId = require("mongodb").ObjectId;
 app.use(cors())
 app.use(express.json())
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.jo0ws.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.jo0ws.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
+
+// const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.jo0ws.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 console.log(uri);
@@ -20,6 +22,7 @@ async function run() {
     try {
         await client.connect();
         const database = client.db("holiday-planner");
+        // const database2 = client.db("holiday-planner-2");
         const packageCollection = database.collection("packages");
         const userBookedCollection = database.collection("userBooked")
         const confirmOrderCollection = database.collection("OrderConfirm")
@@ -101,16 +104,18 @@ async function run() {
                 { $set: { status: "Approve" } }
 
             );
-            console.log('updatingstatus', result)
+            res.send(result)
         });
 
         //delete admin side data 
         app.delete('/finalConfirmation/:id', async (req, res) => {
-            const id = req.params.id;
+            // const id = req.params.id;
+            // console.log(id);
+            // const query = { _id: ObjectId(id) };
 
             const result = await finalOrderConfirmCollection.deleteOne({ _id: req.params.id });
             // console.log(result);
-            res.send(result);
+            res.json(result);
         });
 
 
